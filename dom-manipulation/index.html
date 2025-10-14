@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dynamic Quote Generator</title>
+  <style>
+    /* small inline styles so you have something pretty immediately */
+    body { font-family: system-ui, Arial; padding: 24px; max-width: 720px; margin: auto; }
+    h1 { margin-bottom: 8px; }
+    #quoteDisplay { border: 1px solid #ddd; padding: 16px; border-radius: 8px; min-height: 80px; margin-bottom: 12px; background:#fafafa; }
+    #quoteDisplay p { font-size: 1.15rem; margin: 0 0 8px 0; }
+    #quoteDisplay small { color: #555; }
+    .controls { margin-bottom: 12px; display:flex; gap:8px; flex-wrap:wrap; }
+    input[type="text"] { padding:8px; border:1px solid #ccc; border-radius:6px; min-width:180px; }
+    button { padding:8px 12px; border-radius:6px; border: 1px solid #888; background: #f3f3f3; cursor:pointer; }
+    .msg { color: green; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Quote Generator</h1>
+
+  <!-- Quote display -->
+  <div id="quoteDisplay" aria-live="polite"></div>
+
+  <!-- Button to get a new quote -->
+  <div class="controls">
+    <button id="newQuote">Show New Quote</button>
+  </div>
+
+  <!-- Add quote form -->
+  <h2>Add a Quote</h2>
+  <div class="controls">
+    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <button id="addQuoteBtn">Add Quote</button>
+  </div>
+
+  <div id="status" class="msg" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
