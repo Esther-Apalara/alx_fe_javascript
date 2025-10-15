@@ -45,10 +45,14 @@ function addQuote() {
     return;
   }
 
-  quotes.push({ text: newText, category: newCategory });
+  const newQuote = { text: newText, category: newCategory };
+  quotes.push(newQuote);
   saveQuotes();
   populateCategories();
   displayRandomQuote();
+
+  // Try syncing new quote to the server
+  syncQuoteToServer(newQuote);
 
   textInput.value = "";
   catInput.value = "";
@@ -80,11 +84,8 @@ function populateCategories() {
     categoryFilter.appendChild(option);
   });
 
-  // Restore last selected category
   const savedCategory = localStorage.getItem("selectedCategory");
-  if (savedCategory) {
-    categoryFilter.value = savedCategory;
-  }
+  if (savedCategory) categoryFilter.value = savedCategory;
 }
 
 // ===== Web Storage =====
@@ -119,21 +120,89 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
+// ===== Server Sync Simulation =====
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // mock API endpoint
+
+// Fetch quotes from server (simulated)
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverData = await response.json();
+
+    // Simulate server quotes
+    const serverQuotes = [
+      { text: "Success is not in what you have, but who you are.", category: "Success" },
+      { text: "Programming is the art of algorithm design and the craft of debugging.", category: "Programming" }
+    ];
+
+    handleServerSync(serverQuotes);
+  } catch (error) {
+    console.error("Failed to fetch from server:", error);
+  }
+}
+
+// Push a new quote to the server (simulated)
+async function syncQuoteToServer(quote) {
+  try {
+    await fetch(SERVER_URL, {
+      method: "POST",
+      body: JSON.stringify(quote),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    });
+    console.log("Quote synced with server:", quote);
+  } catch (error) {
+    console.error("Failed to sync quote:", error);
+  }
+}
+
+// Handle conflict resolution — server always wins
+function handleServerSync(serverQuotes) {
+  const localTexts = quotes.map(q => q.text);
+  let updated = false;
+
+  serverQuotes.forEach(serverQuote => {
+    if (!localTexts.includes(serverQuote.text)) {
+      quotes.push(serverQuote);
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveQuotes();
+    populateCategories();
+    notifyUser("Quotes updated from server.");
+  }
+}
+
+// Notify user about updates/conflicts
+function notifyUser(message) {
+  const note = document.createElement("div");
+  note.textContent = message;
+  note.style.background = "#fffae6";
+  note.style.border = "1px solid #ccc";
+  note.style.padding = "10px";
+  note.style.margin = "10px 0";
+  document.body.prepend(note);
+
+  setTimeout(() => note.remove(), 4000);
+}
+
+// Periodic sync every 10 seconds
+setInterval(fetchQuotesFromServer, 10000);
+
 // ===== Initialize Page =====
 document.addEventListener("DOMContentLoaded", function () {
   populateCategories();
 
-  // Restore last selected filter
   const savedCategory = localStorage.getItem("selectedCategory") || "all";
   document.getElementById("categoryFilter").value = savedCategory;
 
-  // Attach event listener for Show New Quote button
   const btn = document.getElementById("newQuote");
   if (btn) btn.addEventListener("click", displayRandomQuote);
 
-  // Attach export button event
   const exportBtn = document.getElementById("exportBtn");
   if (exportBtn) exportBtn.addEventListener("click", exportToJsonFile);
 
   displayRandomQuote();
+  fetchQuotesFromServer();
 });
