@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dynamic Quote Generator</title>
 </head>
 <body>
@@ -13,23 +13,27 @@
 
   <!-- Category Filter -->
   <label for="categoryFilter">Filter by Category:</label>
-  <select id="categoryFilter" onchange="filterQuotes()">
+  <select id="categoryFilter">
     <option value="all">All Categories</option>
   </select>
 
   <!-- Buttons -->
-  <button id="newQuote">Show New Quote</button>
+  <button id="showQuoteBtn">Show New Quote</button>
+  <button id="syncBtn">Sync with Server</button>
   <button id="exportBtn">Export Quotes</button>
 
   <!-- Add Quote Form -->
   <div id="addQuoteForm">
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button onclick="addQuote()">Add Quote</button>
+    <button onclick="addQuote(
+      document.getElementById('newQuoteText').value,
+      document.getElementById('newQuoteCategory').value
+    )">Add Quote</button>
   </div>
 
   <!-- Import JSON -->
-  <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+  <input type="file" id="importFile" accept=".json" />
 
   <script src="script.js"></script>
 </body>
