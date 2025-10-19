@@ -17,12 +17,22 @@ function saveQuotes() {
 }
 
 // Add a new quote
-function addQuote(text, category) {
-  if (!text || !category) return;
+function addQuote() {
+  const text = document.getElementById("newQuoteText")?.value.trim();
+  const category = document.getElementById("newQuoteCategory")?.value.trim();
+
+  if (!text || !category) {
+    alert("Please enter both a quote and a category.");
+    return;
+  }
+
   quotes.push({ text, category });
   saveQuotes();
-  populateCategories(); // ✅ update dropdown if new category added
+  populateCategories();
   displayRandomQuote();
+
+  document.getElementById("newQuoteText").value = "";
+  document.getElementById("newQuoteCategory").value = "";
 }
 
 // Fetch quotes from mock server (simulation)
@@ -154,7 +164,7 @@ function filterQuotes() {
   }
 }
 
-// Event listeners
+// ✅ Event listeners
 document.getElementById("showQuoteBtn")?.addEventListener("click", displayRandomQuote);
 document.getElementById("syncBtn")?.addEventListener("click", syncQuotes);
 document.getElementById("exportBtn")?.addEventListener("click", exportToJsonFile);
